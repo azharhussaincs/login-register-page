@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aetheria - Next-Gen Authentication</title>
+  <meta name="description" content="Experience seamless and secure authentication with Aetheria." />
+  
+  <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Canvas Background for Animated Ambient Nodes & Mesh -->
+  <canvas id="ambient-canvas"></canvas>
+
+  <!-- Ambient Light Orbs -->
+  <div class="ambient-orb orb-1"></div>
+  <div class="ambient-orb orb-2"></div>
+  <div class="ambient-orb orb-3"></div>
+
+  <!-- Theme Preset Selector -->
+  <div class="theme-selector">
+    <button class="theme-btn active" data-theme="midnight" title="Midnight Nebula">
+      <span class="dot midnight-dot"></span>
+    </button>
+    <button class="theme-btn" data-theme="cyberpunk" title="Cyberpunk Neon">
+      <span class="dot cyberpunk-dot"></span>
+    </button>
+    <button class="theme-btn" data-theme="emerald" title="Emerald Aurora">
+      <span class="dot emerald-dot"></span>
+    </button>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Main Container -->
+  <main class="app-container">
+    
+    <!-- Glassmorphic Authentication Card -->
+    <div class="auth-card" id="auth-card">
+      
+      <!-- Brand Header -->
+      <div class="brand-header">
+        <div class="brand-logo">
+          <div class="logo-icon-wrapper">
+            <i class="fa-solid fa-bolt logo-icon"></i>
+          </div>
+          <span class="brand-name">Aetheria<span class="brand-dot">.</span></span>
+        </div>
+        <p class="brand-tagline" id="brand-tagline">Welcome back! Please enter your details.</p>
+      </div>
+
+      <!-- Auth Navigation Tabs -->
+      <div class="auth-tabs" id="auth-tabs">
+        <button class="tab-btn active" id="tab-login" onclick="switchTab('login')">Sign In</button>
+        <button class="tab-btn" id="tab-signup" onclick="switchTab('signup')">Create Account</button>
+        <div class="tab-indicator" id="tab-indicator"></div>
+      </div>
+
+      <!-- FORM 1: LOGIN -->
+      <form class="auth-form active" id="login-form" onsubmit="handleLogin(event)" novalidate>
+        <!-- Email Group -->
+        <div class="input-group">
+          <label for="login-email">Email Address</label>
+          <div class="input-wrapper">
+            <i class="fa-regular fa-envelope input-icon"></i>
+            <input type="email" id="login-email" placeholder="name@company.com" required autocomplete="email" />
+            <i class="fa-solid fa-circle-check status-icon success-icon"></i>
+            <i class="fa-solid fa-circle-exclamation status-icon error-icon"></i>
+          </div>
+          <span class="error-text" id="login-email-error">Please enter a valid email address.</span>
+        </div>
+
+        <!-- Password Group -->
+        <div class="input-group">
+          <div class="label-row">
+            <label for="login-password">Password</label>
+            <a href="javascript:void(0)" class="forgot-link" onclick="switchTab('forgot')">Forgot password?</a>
+          </div>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-lock input-icon"></i>
+            <input type="password" id="login-password" placeholder="••••••••••••" required autocomplete="current-password" />
+            <button type="button" class="toggle-password" onclick="togglePasswordVisibility('login-password', this)" aria-label="Toggle password visibility">
+              <i class="fa-regular fa-eye"></i>
+            </button>
+          </div>
+          <span class="error-text" id="login-password-error">Password is required.</span>
+        </div>
+
+        <!-- Options Row: Remember Me -->
+        <div class="form-options">
+          <label class="custom-checkbox">
+            <input type="checkbox" id="remember-me" checked />
+            <span class="checkmark">
+              <i class="fa-solid fa-check"></i>
+            </span>
+            <span class="checkbox-label">Keep me signed in for 30 days</span>
+          </label>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="submit-btn" id="login-submit-btn">
+          <span class="btn-text">Sign In to Dashboard</span>
+          <i class="fa-solid fa-arrow-right btn-icon"></i>
+          <div class="btn-spinner"></div>
+        </button>
+
+        <!-- Divider -->
+        <div class="divider">
+          <span>Or sign in with</span>
+        </div>
+
+        <!-- Social Sign-in Buttons -->
+        <div class="social-grid">
+          <button type="button" class="social-btn" onclick="handleSocialAuth('Google')">
+            <svg class="social-svg" viewBox="0 0 24 24">
+              <path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.3 9 5 12 5z"/>
+              <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"/>
+              <path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 10.8 0 12s.7 2.3 1.9 4.7l3.7-2.9z"/>
+              <path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.3-6.4-5.2L1.9 16C3.7 19.7 7.5 23 12 23z"/>
+            </svg>
+            <span>Google</span>
+          </button>
+
+          <button type="button" class="social-btn" onclick="handleSocialAuth('GitHub')">
+            <i class="fa-brands fa-github social-icon"></i>
+            <span>GitHub</span>
+          </button>
+
+          <button type="button" class="social-btn" onclick="handleSocialAuth('Apple')">
+            <i class="fa-brands fa-apple social-icon"></i>
+            <span>Apple</span>
+          </button>
+        </div>
+      </form>
+
+      <!-- FORM 2: SIGN UP -->
+      <form class="auth-form" id="signup-form" onsubmit="handleSignup(event)" novalidate>
+        <!-- Full Name -->
+        <div class="input-group">
+          <label for="signup-name">Full Name</label>
+          <div class="input-wrapper">
+            <i class="fa-regular fa-user input-icon"></i>
+            <input type="text" id="signup-name" placeholder="Alex Morgan" required autocomplete="name" />
+          </div>
+          <span class="error-text" id="signup-name-error">Please enter your name.</span>
+        </div>
+
+        <!-- Signup Email -->
+        <div class="input-group">
+          <label for="signup-email">Email Address</label>
+          <div class="input-wrapper">
+            <i class="fa-regular fa-envelope input-icon"></i>
+            <input type="email" id="signup-email" placeholder="name@company.com" required autocomplete="email" />
+          </div>
+          <span class="error-text" id="signup-email-error">Please enter a valid email address.</span>
+        </div>
+
+        <!-- Signup Password -->
+        <div class="input-group">
+          <label for="signup-password">Password</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-lock input-icon"></i>
+            <input type="password" id="signup-password" placeholder="Create a strong password" required autocomplete="new-password" oninput="assessPasswordStrength(this.value)" />
+            <button type="button" class="toggle-password" onclick="togglePasswordVisibility('signup-password', this)" aria-label="Toggle password visibility">
+              <i class="fa-regular fa-eye"></i>
+            </button>
+          </div>
+          
+          <!-- Password Strength Indicator -->
+          <div class="strength-meter">
+            <div class="meter-bars">
+              <div class="bar" id="bar-1"></div>
+              <div class="bar" id="bar-2"></div>
+              <div class="bar" id="bar-3"></div>
+              <div class="bar" id="bar-4"></div>
+            </div>
+            <span class="strength-text" id="strength-text">Password strength</span>
+          </div>
+
+          <!-- Password Requirements Checklist -->
+          <div class="req-checklist">
+            <div class="req-item" id="req-length"><i class="fa-solid fa-circle-dot"></i> At least 8 characters</div>
+            <div class="req-item" id="req-upper"><i class="fa-solid fa-circle-dot"></i> Uppercase & lowercase letters</div>
+            <div class="req-item" id="req-number"><i class="fa-solid fa-circle-dot"></i> Number & special character</div>
+          </div>
+        </div>
+
+        <!-- Terms Agreement -->
+        <div class="form-options">
+          <label class="custom-checkbox">
+            <input type="checkbox" id="terms-agree" required />
+            <span class="checkmark">
+              <i class="fa-solid fa-check"></i>
+            </span>
+            <span class="checkbox-label">I agree to the <a href="javascript:void(0)" class="inline-link">Terms of Service</a> and <a href="javascript:void(0)" class="inline-link">Privacy Policy</a></span>
+          </label>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="submit-btn" id="signup-submit-btn">
+          <span class="btn-text">Create Free Account</span>
+          <i class="fa-solid fa-user-plus btn-icon"></i>
+          <div class="btn-spinner"></div>
+        </button>
+
+        <div class="footer-note">
+          Already have an account? <a href="javascript:void(0)" class="inline-link" onclick="switchTab('login')">Sign in here</a>
+        </div>
+      </form>
+
+      <!-- FORM 3: FORGOT PASSWORD -->
+      <form class="auth-form" id="forgot-form" onsubmit="handleForgot(event)" novalidate>
+        <p class="form-description">
+          Enter your registered email address and we'll send you a password reset code.
+        </p>
+
+        <div class="input-group">
+          <label for="forgot-email">Email Address</label>
+          <div class="input-wrapper">
+            <i class="fa-regular fa-envelope input-icon"></i>
+            <input type="email" id="forgot-email" placeholder="name@company.com" required />
+          </div>
+          <span class="error-text" id="forgot-email-error">Please enter a valid email address.</span>
+        </div>
+
+        <button type="submit" class="submit-btn" id="forgot-submit-btn">
+          <span class="btn-text">Send Reset Instructions</span>
+          <i class="fa-solid fa-paper-plane btn-icon"></i>
+          <div class="btn-spinner"></div>
+        </button>
+
+        <div class="back-to-login">
+          <a href="javascript:void(0)" onclick="switchTab('login')" class="back-link">
+            <i class="fa-solid fa-arrow-left"></i> Back to Sign In
+          </a>
+        </div>
+      </form>
+
+      <!-- VIEW 4: SUCCESS DASHBOARD -->
+      <div class="dashboard-view" id="dashboard-view">
+        <div class="success-avatar">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <h2 class="dash-title">Authenticated Successfully!</h2>
+        <p class="dash-subtitle">Welcome back, <strong id="dash-user-name">User</strong></p>
+
+        <div class="dash-badge">
+          <i class="fa-solid fa-circle-check"></i> Session Active (AES-256 Encrypted)
+        </div>
+
+        <div class="dash-stats">
+          <div class="stat-card">
+            <span class="stat-val">2FA</span>
+            <span class="stat-lbl">Security</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-val">Active</span>
+            <span class="stat-lbl">Status</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-val">99.9%</span>
+            <span class="stat-lbl">Uptime</span>
+          </div>
+        </div>
+
+        <button type="button" class="submit-btn secondary-btn" onclick="handleLogout()">
+          <i class="fa-solid fa-arrow-right-from-bracket btn-icon"></i>
+          <span class="btn-text">Sign Out</span>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Page Footer -->
+    <footer class="app-footer">
+      <p>© 2026 Aetheria Inc. All rights reserved. &bull; Protected by reCAPTCHA & Privacy Safeguard</p>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
